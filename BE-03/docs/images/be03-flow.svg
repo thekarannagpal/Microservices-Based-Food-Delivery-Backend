@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="620" viewBox="0 0 1150 620">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#5c677d"/>
+    </marker>
+    <style>
+      .box { fill:#ffffff; stroke:#2b3a67; stroke-width:2; rx:10; }
+      .step { fill:#eef3ff; stroke:#4361ee; stroke-width:2; rx:9; }
+      .warn { fill:#fff4e6; stroke:#e76f51; stroke-width:2; rx:9; }
+      .label { font: 14px Segoe UI, Arial, sans-serif; fill:#14213d; text-anchor:middle; }
+      .small { font: 11px Segoe UI, Arial, sans-serif; fill:#5c677d; text-anchor:middle; }
+      .title { font: 22px Segoe UI, Arial, sans-serif; fill:#14213d; font-weight:bold; }
+      .line { stroke:#5c677d; stroke-width:1.7; marker-end:url(#arrow); fill:none; }
+    </style>
+  </defs>
+
+  <text x="575" y="36" class="title">BE-03 — Request Lifecycle</text>
+
+  <rect x="30" y="100" width="150" height="70" class="box"/>
+  <text x="105" y="132" class="label">Client</text>
+  <text x="105" y="152" class="small">X-API-Key</text>
+
+  <rect x="235" y="90" width="180" height="90" class="step"/>
+  <text x="325" y="122" class="label">1. Hash key</text>
+  <text x="325" y="145" class="small">SHA-256 lookup in PG</text>
+  <text x="325" y="163" class="small">rejected if revoked</text>
+
+  <rect x="470" y="90" width="180" height="90" class="warn"/>
+  <text x="560" y="122" class="label">2. Token bucket</text>
+  <text x="560" y="145" class="small">Redis HSET / EXPIRE</text>
+  <text x="560" y="163" class="small">429 + Retry-After</text>
+
+  <rect x="705" y="90" width="180" height="90" class="step"/>
+  <text x="795" y="122" class="label">3. Meter call</text>
+  <text x="795" y="145" class="small">hourly hash + event</text>
+  <text x="795" y="163" class="small">status &amp; endpoint</text>
+
+  <line x1="180" y1="135" x2="233" y2="135" class="line"/>
+  <line x1="415" y1="135" x2="468" y2="135" class="line"/>
+  <line x1="650" y1="135" x2="703" y2="135" class="line"/>
+
+  <rect x="705" y="280" width="180" height="90" class="step"/>
+  <text x="795" y="312" class="label">4. Endpoint</text>
+  <text x="795" y="335" class="small">POST /v1/analyze</text>
+  <text x="795" y="353" class="small">sentiment result</text>
+
+  <rect x="470" y="280" width="180" height="90" class="step"/>
+  <text x="560" y="312" class="label">5. Celery beat</text>
+  <text x="560" y="335" class="small">every 5 minutes</text>
+  <text x="560" y="353" class="small">aggregate_usage()</text>
+
+  <rect x="235" y="280" width="180" height="90" class="step"/>
+  <text x="325" y="312" class="label">6. Usage summary</text>
+  <text x="325" y="335" class="small">PostgreSQL rollup</text>
+  <text x="325" y="353" class="small">GET /v1/usage</text>
+
+  <line x1="795" y1="180" x2="795" y2="278" class="line"/>
+  <line x1="705" y1="325" x2="652" y2="325" class="line"/>
+  <line x1="470" y1="325" x2="417" y2="325" class="line"/>
+
+  <rect x="400" y="460" width="350" height="86" class="warn"/>
+  <text x="575" y="492" class="label">Billing: /v1/billing/checkout → Stripe test mode</text>
+  <text x="575" y="516" class="small">webhook activates Pro plan; quota + rate limit increase immediately</text>
+
+  <line x1="325" y1="370" x2="480" y2="458" class="line"/>
+  <line x1="560" y1="370" x2="575" y2="458" class="line"/>
+</svg>

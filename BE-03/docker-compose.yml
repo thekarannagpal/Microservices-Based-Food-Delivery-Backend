@@ -1,0 +1,75 @@
+name: nexvia-api-platform
+
+x-api-env: &api-env
+  DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/nexvia_api
+  REDIS_URL: redis://redis:6379/0
+  ADMIN_TOKEN: ${ADMIN_TOKEN:-admin-demo-token}
+  FREE_RATE_PER_MINUTE: ${FREE_RATE_PER_MINUTE:-10}
+  PRO_RATE_PER_MINUTE: ${PRO_RATE_PER_MINUTE:-100}
+  STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+  STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nexvia_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nexvia_api"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment: *api-env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build: .
+    command: celery -A app.tasks:celery_app worker --loglevel=info
+    environment: *api-env
+    depends_on:
+      - api
+
+  beat:
+    build: .
+    command: celery -A app.tasks:celery_app beat --loglevel=info
+    environment: *api-env
+    depends_on:
+      - api
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:

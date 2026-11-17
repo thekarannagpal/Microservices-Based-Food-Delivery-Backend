@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="700" viewBox="0 0 1150 700">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#5c677d"/>
+    </marker>
+    <style>
+      .box { fill:#ffffff; stroke:#2b3a67; stroke-width:2; rx:10; }
+      .api { fill:#eef3ff; stroke:#4361ee; stroke-width:2; rx:10; }
+      .store { fill:#eaf7f0; stroke:#2a9d8f; stroke-width:2; rx:10; }
+      .ext { fill:#fff4e6; stroke:#e76f51; stroke-width:2; rx:10; }
+      .label { font: 14px Segoe UI, Arial, sans-serif; fill:#14213d; text-anchor:middle; }
+      .small { font: 11px Segoe UI, Arial, sans-serif; fill:#5c677d; text-anchor:middle; }
+      .title { font: 22px Segoe UI, Arial, sans-serif; fill:#14213d; font-weight:bold; }
+      .line { stroke:#5c677d; stroke-width:1.7; marker-end:url(#arrow); fill:none; }
+    </style>
+  </defs>
+
+  <text x="575" y="36" class="title">BE-03 — API Platform with Rate Limiting &amp; Billing</text>
+
+  <rect x="30" y="80" width="170" height="64" class="box"/>
+  <text x="115" y="116" class="label">Developer / Client</text>
+
+  <rect x="300" y="60" width="300" height="104" class="api"/>
+  <text x="450" y="92" class="label">FastAPI application</text>
+  <text x="450" y="116" class="small">/v1/analyze · /v1/keys · /v1/usage</text>
+  <text x="450" y="137" class="small">middleware: auth → limit → meter</text>
+
+  <line x1="200" y1="112" x2="298" y2="112" class="line"/>
+  <text x="250" y="100" class="small">X-API-Key</text>
+
+  <rect x="80" y="260" width="220" height="80" class="store"/>
+  <text x="190" y="292" class="label">Redis</text>
+  <text x="190" y="314" class="small">token buckets + usage events</text>
+
+  <rect x="390" y="260" width="220" height="80" class="store"/>
+  <text x="500" y="292" class="label">PostgreSQL</text>
+  <text x="500" y="314" class="small">keys · summaries · subscriptions</text>
+
+  <rect x="700" y="260" width="220" height="80" class="ext"/>
+  <text x="810" y="292" class="label">Celery worker + beat</text>
+  <text x="810" y="314" class="small">hourly usage aggregation</text>
+
+  <rect x="30" y="430" width="220" height="80" class="ext"/>
+  <text x="140" y="462" class="label">Stripe test mode</text>
+  <text x="140" y="484" class="small">checkout + webhooks</text>
+
+  <rect x="340" y="430" width="220" height="80" class="ext"/>
+  <text x="450" y="462" class="label">Prometheus :9090</text>
+  <text x="450" y="484" class="small">scrapes /metrics</text>
+
+  <rect x="650" y="430" width="270" height="80" class="api"/>
+  <text x="785" y="462" class="label">Developer Portal /docs</text>
+  <text x="785" y="484" class="small">OpenAPI + SDK generation</text>
+
+  <line x1="370" y1="164" x2="250" y2="258" class="line"/>
+  <line x1="440" y1="164" x2="490" y2="258" class="line"/>
+  <line x1="520" y1="164" x2="790" y2="258" class="line"/>
+  <line x1="330" y1="164" x2="180" y2="428" class="line"/>
+  <line x1="500" y1="340" x2="500" y2="428" class="line"/>
+  <line x1="190" y1="340" x2="810" y2="340" class="line"/>
+  <line x1="600" y1="112" x2="648" y2="470" class="line"/>
+
+  <text x="575" y="600" class="small">Plans: Free (10/min, 1k/month) · Pro (100/min, 100k/month, $19)</text>
+  <text x="575" y="628" class="small">SDKs: OpenAPI Generator → sdk/python + sdk/typescript</text>
+</svg>
