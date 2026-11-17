@@ -1,5 +1,7 @@
 # Architecture
 
+Rendered diagrams: [architecture](docs/images/be02-architecture.svg) · [saga compensation](docs/images/be02-saga.svg)
+
 ## System context
 
 ```mermaid

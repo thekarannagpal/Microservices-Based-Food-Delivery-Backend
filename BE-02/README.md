@@ -1,6 +1,14 @@
-# Nexvia — Event-Driven Food Delivery Backend
+# BE-02 — Event-Driven Food Delivery Backend
 
 A microservices backend for food ordering. Six NestJS services own their own MongoDB databases, cooperate through RabbitMQ events, use gRPC for the fast pricing call, sit behind Kong, and report traces to Jaeger.
+
+> This project lives in `D:\Nexvia\BE-02`. The sibling `BE-03` folder contains the API platform with billing and rate limiting.
+
+## Diagrams
+
+![BE-02 architecture](docs/images/be02-architecture.svg)
+
+![BE-02 saga](docs/images/be02-saga.svg)
 
 ## Stack
 
@@ -21,7 +29,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and saga diagrams, and [AP
 Prerequisites: Docker Desktop (or Docker Engine + Compose v2). Node 20+ is only needed to run the unit tests/smoke script outside a container.
 
 ```bash
-cd D:\Nexvia
+cd D:\Nexvia\BE-02
 npm install
 npm run build        # compile shared lib + all services
 npm test             # 9 unit tests (saga + trace propagation)

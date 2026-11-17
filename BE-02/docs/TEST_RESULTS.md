@@ -1,6 +1,6 @@
 # Test results
 
-Environment used to generate this repository: Windows, Node v26.13.1, npm 11.20.0. Docker CLI was **not available**, so container startup and the HTTP smoke test could not be executed here; commands and expected results are documented below for a Docker-enabled machine.
+Environment used to generate this repository: Windows, Node v26.13.1, npm 11.20.0. Docker CLI was **not available**, so container startup and the HTTP smoke test could not be executed here; commands and expected results are documented below for a Docker-enabled machine. All commands assume `cd D:\Nexvia\BE-02`.
 
 ## Executed successfully
 

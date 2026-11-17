@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#5c677d"/>
+    </marker>
+    <style>
+      .box { fill:#ffffff; stroke:#2b3a67; stroke-width:2; rx:10; }
+      .svc { fill:#eef3ff; stroke:#4361ee; stroke-width:2; rx:10; }
+      .db { fill:#eaf7f0; stroke:#2a9d8f; stroke-width:2; rx:8; }
+      .infra { fill:#fff4e6; stroke:#e76f51; stroke-width:2; rx:10; }
+      .label { font: 14px Segoe UI, Arial, sans-serif; fill:#14213d; text-anchor:middle; }
+      .small { font: 11px Segoe UI, Arial, sans-serif; fill:#5c677d; text-anchor:middle; }
+      .title { font: 22px Segoe UI, Arial, sans-serif; fill:#14213d; font-weight:bold; }
+      .line { stroke:#5c677d; stroke-width:1.6; marker-end:url(#arrow); fill:none; }
+      .dash { stroke:#4361ee; stroke-width:1.8; stroke-dasharray:6 4; marker-end:url(#arrow); fill:none; }
+    </style>
+  </defs>
+
+  <text x="600" y="34" class="title">BE-02 — Event-Driven Food Delivery Backend</text>
+
+  <rect x="20" y="60" width="150" height="62" class="box"/>
+  <text x="95" y="97" class="label">Client / smoke</text>
+
+  <rect x="250" y="52" width="200" height="78" class="infra"/>
+  <text x="350" y="85" class="label">Kong API Gateway</text>
+  <text x="350" y="106" class="small">key-auth + rate limits</text>
+  <line x1="170" y1="91" x2="248" y2="91" class="line"/>
+
+  <rect x="20" y="205" width="165" height="72" class="svc"/>
+  <text x="102" y="235" class="label">users</text><text x="102" y="255" class="small">password auth</text>
+
+  <rect x="205" y="205" width="165" height="72" class="svc"/>
+  <text x="287" y="235" class="label">restaurants</text><text x="287" y="255" class="small">menu + gRPC pricing</text>
+
+  <rect x="390" y="205" width="165" height="72" class="svc"/>
+  <text x="472" y="235" class="label">orders</text><text x="472" y="255" class="small">saga orchestrator</text>
+
+  <rect x="575" y="205" width="165" height="72" class="svc"/>
+  <text x="657" y="235" class="label">payments</text><text x="657" y="255" class="small">capture + refund</text>
+
+  <rect x="760" y="205" width="165" height="72" class="svc"/>
+  <text x="842" y="235" class="label">delivery</text><text x="842" y="255" class="small">courier dispatch</text>
+
+  <rect x="945" y="205" width="165" height="72" class="svc"/>
+  <text x="1027" y="235" class="label">notifications</text><text x="1027" y="255" class="small">event log</text>
+
+  <line x1="300" y1="130" x2="110" y2="203" class="line"/>
+  <line x1="325" y1="130" x2="290" y2="203" class="line"/>
+  <line x1="350" y1="130" x2="475" y2="203" class="line"/>
+  <line x1="385" y1="130" x2="660" y2="203" class="line"/>
+  <line x1="410" y1="130" x2="845" y2="203" class="line"/>
+  <line x1="440" y1="130" x2="1025" y2="203" class="line"/>
+
+  <path d="M390 250 C330 170 280 170 270 205" class="dash"/>
+  <text x="330" y="170" class="small">gRPC CalculateQuote</text>
+
+  <rect x="390" y="365" width="420" height="78" class="infra"/>
+  <text x="600" y="397" class="label">RabbitMQ — nexvia.events (topic)</text>
+  <text x="600" y="418" class="small">order.* · payment.* · stock.* · delivery.*</text>
+  <line x1="287" y1="277" x2="450" y2="363" class="line"/>
+  <line x1="472" y1="277" x2="520" y2="363" class="line"/>
+  <line x1="657" y1="277" x2="650" y2="363" class="line"/>
+  <line x1="842" y1="277" x2="750" y2="363" class="line"/>
+  <line x1="1027" y1="277" x2="780" y2="363" class="line"/>
+
+  <rect x="20" y="505" width="165" height="62" class="db"/>
+  <text x="102" y="541" class="label">nexvia_users</text>
+  <rect x="205" y="505" width="165" height="62" class="db"/>
+  <text x="287" y="541" class="label">nexvia_restaurants</text>
+  <rect x="390" y="505" width="165" height="62" class="db"/>
+  <text x="472" y="541" class="label">nexvia_orders</text>
+  <rect x="575" y="505" width="165" height="62" class="db"/>
+  <text x="657" y="541" class="label">nexvia_payments</text>
+  <rect x="760" y="505" width="165" height="62" class="db"/>
+  <text x="842" y="541" class="label">nexvia_delivery</text>
+  <rect x="945" y="505" width="165" height="62" class="db"/>
+  <text x="1027" y="541" class="label">nexvia_notifications</text>
+
+  <line x1="102" y1="277" x2="102" y2="503" class="line"/>
+  <line x1="287" y1="277" x2="287" y2="503" class="line"/>
+  <line x1="472" y1="277" x2="472" y2="503" class="line"/>
+  <line x1="657" y1="277" x2="657" y2="503" class="line"/>
+  <line x1="842" y1="277" x2="842" y2="503" class="line"/>
+  <line x1="1027" y1="277" x2="1027" y2="503" class="line"/>
+
+  <rect x="800" y="650" width="310" height="72" class="infra"/>
+  <text x="955" y="682" class="label">Jaeger (Zipkin :9411)</text>
+  <text x="955" y="703" class="small">traceparent across HTTP/AMQP/gRPC</text>
+  <line x1="472" y1="443" x2="900" y2="648" class="dash"/>
+  <line x1="657" y1="443" x2="940" y2="648" class="dash"/>
+</svg>

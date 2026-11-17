@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="680" viewBox="0 0 1100 680">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#5c677d"/>
+    </marker>
+    <marker id="redarrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#d62828"/>
+    </marker>
+    <style>
+      .state { fill:#eef3ff; stroke:#4361ee; stroke-width:2; rx:12; }
+      .ok { fill:#eaf7f0; stroke:#2a9d8f; stroke-width:2; rx:10; }
+      .bad { fill:#fdecec; stroke:#d62828; stroke-width:2; rx:10; }
+      .label { font: 15px Segoe UI, Arial, sans-serif; fill:#14213d; text-anchor:middle; }
+      .small { font: 12px Segoe UI, Arial, sans-serif; fill:#5c677d; text-anchor:middle; }
+      .title { font: 22px Segoe UI, Arial, sans-serif; fill:#14213d; font-weight:bold; }
+      .line { stroke:#5c677d; stroke-width:1.8; marker-end:url(#arrow); fill:none; }
+      .fail { stroke:#d62828; stroke-width:2; stroke-dasharray:6 4; marker-end:url(#redarrow); fill:none; }
+      .good { stroke:#2a9d8f; stroke-width:2; marker-end:url(#arrow); fill:none; }
+    </style>
+  </defs>
+
+  <text x="550" y="36" class="title">BE-02 — Order Saga &amp; Compensation</text>
+
+  <rect x="430" y="80" width="240" height="70" class="state"/>
+  <text x="550" y="112" class="label">PENDING_PAYMENT</text>
+  <text x="550" y="133" class="small">order created, stock pending</text>
+
+  <rect x="770" y="250" width="240" height="70" class="ok"/>
+  <text x="890" y="282" class="label">CONFIRMED</text>
+  <text x="890" y="303" class="small">delivery requested</text>
+
+  <rect x="90" y="250" width="240" height="70" class="bad"/>
+  <text x="210" y="282" class="label">CANCELLED</text>
+  <text x="210" y="303" class="small">compensation in progress</text>
+
+  <path d="M640 130 C740 140 840 190 890 248" class="good"/>
+  <text x="790" y="180" class="small">payment.completed</text>
+
+  <path d="M470 130 C370 140 250 190 210 248" class="fail"/>
+  <text x="320" y="180" class="small">payment.failed</text>
+
+  <path d="M430 110 C300 120 170 180 170 248" class="fail"/>
+  <text x="230" y="215" class="small">stock.reservation.failed</text>
+
+  <path d="M770 285 C600 285 400 285 332 285" class="fail"/>
+  <text x="550" y="272" class="small">late stock failure / manual cancel</text>
+
+  <rect x="60" y="430" width="280" height="90" class="bad"/>
+  <text x="200" y="462" class="label">restaurants</text>
+  <text x="200" y="486" class="small">release stock on order.cancelled</text>
+  <text x="200" y="505" class="small">atomic $inc rollback</text>
+
+  <rect x="760" y="430" width="280" height="90" class="bad"/>
+  <text x="900" y="462" class="label">payments</text>
+  <text x="900" y="486" class="small">refund on payment.refund.requested</text>
+  <text x="900" y="505" class="small">late success never confirms</text>
+
+  <line x1="210" y1="320" x2="200" y2="428" class="fail"/>
+  <line x1="890" y1="320" x2="900" y2="428" class="fail"/>
+
+  <text x="550" y="600" class="small">Pure transitions: resolveOnPaymentResult · resolveOnStockFailure · resolveOnManualCancel (unit tested)</text>
+  <text x="550" y="628" class="small">Event dedupe: processedEvents[] on orders/payments/delivery + unique eventId in notifications</text>
+</svg>
