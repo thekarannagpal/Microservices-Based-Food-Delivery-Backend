@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./libs/shared" },
+    { "path": "./services/users" },
+    { "path": "./services/restaurants" },
+    { "path": "./services/orders" },
+    { "path": "./services/payments" },
+    { "path": "./services/delivery" },
+    { "path": "./services/notifications" }
+  ]
+}

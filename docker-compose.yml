@@ -1,0 +1,172 @@
+name: nexvia
+
+x-service-common: &service-common
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    args:
+      SERVICE: ${SERVICE:-nexvia}
+  environment: &service-env
+    MONGODB_URI: mongodb://mongodb:27017
+    RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    JAEGER_ZIPKIN_URL: http://jaeger:9411
+    PRICING_GRPC_URL: restaurants:50051
+    PAYMENT_FAIL_CUSTOMERS: fail-customer
+    PAYMENT_MAX_AMOUNT: "10000"
+  depends_on:
+    mongodb:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+    jaeger:
+      condition: service_started
+
+services:
+  mongodb:
+    image: mongo:8
+    container_name: nexvia-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: nexvia-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.62
+    container_name: nexvia-jaeger
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"
+      - "9411:9411"
+      - "4318:4318"
+
+  users:
+    <<: *service-common
+    container_name: nexvia-users
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: users
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_users
+    ports:
+      - "3001:3000"
+
+  restaurants:
+    <<: *service-common
+    container_name: nexvia-restaurants
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: restaurants
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_restaurants
+    ports:
+      - "3002:3000"
+      - "50051:50051"
+
+  orders:
+    <<: *service-common
+    container_name: nexvia-orders
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: orders
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_orders
+    ports:
+      - "3003:3000"
+
+  payments:
+    <<: *service-common
+    container_name: nexvia-payments
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: payments
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_payments
+    ports:
+      - "3004:3000"
+
+  delivery:
+    <<: *service-common
+    container_name: nexvia-delivery
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: delivery
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_delivery
+    ports:
+      - "3005:3000"
+
+  notifications:
+    <<: *service-common
+    container_name: nexvia-notifications
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SERVICE: notifications
+    environment:
+      <<: *service-env
+      MONGODB_DB: nexvia_notifications
+    ports:
+      - "3006:3000"
+
+  kong:
+    image: kong:3.9
+    container_name: nexvia-kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yaml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    volumes:
+      - ./infra/kong/kong.yaml:/etc/kong/kong.yaml:ro
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    depends_on:
+      - users
+      - restaurants
+      - orders
+      - payments
+      - delivery
+      - notifications
+
+volumes:
+  mongodb_data:

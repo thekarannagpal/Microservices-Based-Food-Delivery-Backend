@@ -1,0 +1,121 @@
+_format_version: "3.0"
+_transform: true
+
+consumers:
+  - username: demo-user
+    keyauth_credentials:
+      - key: demo-key-user
+  - username: demo-admin
+    keyauth_credentials:
+      - key: demo-key-admin
+
+plugins:
+  - name: key-auth
+    config:
+      key_names:
+        - apikey
+      hide_credentials: false
+  - name: cors
+    config:
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PATCH
+        - OPTIONS
+      headers:
+        - apikey
+        - content-type
+        - traceparent
+
+services:
+  - name: users
+    url: http://users:3000
+    routes:
+      - name: users-route
+        paths:
+          - /api/users
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true
+
+  - name: restaurants
+    url: http://restaurants:3000
+    routes:
+      - name: restaurants-route
+        paths:
+          - /api/restaurants
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true
+
+  - name: orders
+    url: http://orders:3000
+    routes:
+      - name: orders-route
+        paths:
+          - /api/orders
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 30
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true
+
+  - name: payments
+    url: http://payments:3000
+    routes:
+      - name: payments-route
+        paths:
+          - /api/payments
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true
+
+  - name: delivery
+    url: http://delivery:3000
+    routes:
+      - name: delivery-route
+        paths:
+          - /api/delivery
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true
+
+  - name: notifications
+    url: http://notifications:3000
+    routes:
+      - name: notifications-route
+        paths:
+          - /api/notifications
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+          limit_by: consumer
+          fault_tolerant: true

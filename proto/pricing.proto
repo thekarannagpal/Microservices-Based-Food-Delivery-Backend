@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package pricing;
+
+// Fast service-to-service call used by orders to price a cart.
+service PricingService {
+  rpc CalculateQuote (QuoteRequest) returns (QuoteResponse);
+}
+
+message QuoteItem {
+  string menuItemId = 1;
+  int32 quantity = 2;
+}
+
+message QuoteRequest {
+  string restaurantId = 1;
+  repeated QuoteItem items = 2;
+  // W3C traceparent propagated from the originating HTTP request.
+  string traceparent = 3;
+}
+
+message QuoteLine {
+  string menuItemId = 1;
+  string name = 2;
+  int32 quantity = 3;
+  double unitPrice = 4;
+  double lineTotal = 5;
+}
+
+message QuoteResponse {
+  string restaurantId = 1;
+  repeated QuoteLine lines = 2;
+  double subtotal = 3;
+  double deliveryFee = 4;
+  double tax = 5;
+  double total = 6;
+  string currency = 7;
+  string error = 8;
+}
